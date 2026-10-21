@@ -94,8 +94,29 @@ const ART = (() => {
   };
 })();
 const dishArt = id => `<svg viewBox="0 0 240 170" role="img" aria-label="Illustration of ${esc((DISHES.find(d => d.id === id) || {}).name || id)}">${ART[id] || ""}</svg>`;
+const PHOTOS = {
+  adobo: ["Chicken adobo.jpg", "dbgg1979", "CC BY 2.0"],
+  sinigang: ["Fish sinigang.jpg", "Copperhead02", "CC BY-SA 4.0"],
+  lechon: ["Lechon Baboy sa Sugbo Mercado.jpg", "IndayLiburan", "CC BY 4.0"],
+  karekare: ["Kare-kare.jpg", "Gracinha / Marco Abundo", "CC BY 2.0"],
+  sisig: ["Sisig wikipedia.jpg", "Prime Pacific", "CC BY-SA 4.0"],
+  pancit: ["Pancit palabok.jpg", "bingbing", "CC BY 2.0"],
+  lumpia: ["Lumpiang Shanghai 2023.jpg", "Roderick Suñaz Sumalinog", "CC BY-SA 4.0"],
+  tapsilog: ["Beef Tapa with Egg.jpg", "Maffeth.opiana", "CC BY-SA 4.0"],
+  bulalo: ["Bulalo (Philippines).jpg", "Obsidian Soul", "CC0"],
+  bibingka: ["Bibingka (Philippines) 2.jpg", "Obsidian Soul", "CC0"],
+  turon: ["Turon.jpg", "FoxLad", "CC BY 3.0"]
+};
+function dishPic(d) {
+  const p = PHOTOS[d.id];
+  if (!p) return `<div class="dish-art">${dishArt(d.id)}</div>`;
+  const page = "https://commons.wikimedia.org/wiki/File:" + encodeURIComponent(p[0].replace(/ /g, "_"));
+  return `<figure class="dish-art dish-photo"><img src="img/food/${d.id}.jpg" alt="${esc(d.name)}" loading="lazy" onerror="this.parentNode.classList.add('noimg')">
+    <div class="dish-fallback">${dishArt(d.id)}</div>
+    <figcaption><a href="${page}" target="_blank" rel="noopener">${esc(p[1])}</a> · ${esc(p[2])}</figcaption></figure>`;
+}
 function dishesHTML() {
-  return `<div class="dishgrid">${DISHES.map(d => `<article class="dish"><div class="dish-art">${dishArt(d.id)}</div>
+  return `<div class="dishgrid">${DISHES.map(d => `<article class="dish">${dishPic(d)}
     <div class="dish-body"><div class="row" style="justify-content:space-between;flex-wrap:nowrap"><div><h4>${esc(d.name)}</h4><span class="small muted syl">${sylHTML(d.syl)}</span></div>${playText(d.name)}</div>
     <p>${esc(d.en)}</p><p class="small muted">${esc(d.about)}</p>
     <div class="row" style="gap:6px">${d.taste.map(t => `<span class="tag green">${esc(t)} · ${esc(ITEMS[t] ? ITEMS[t].en : "")}</span>`).join("")}<span class="tag cream">${esc(d.when)}</span></div></div></article>`).join("")}</div>`;

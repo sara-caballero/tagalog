@@ -63,3 +63,5 @@ Notes inside a lesson can also be moved there with `place: "culture"`.
 4. Run `node tools/build_phrases.js` again so `js/audio.js` lists the new recordings.
 
 Audio uses the `fil-PH-BlessicaNeural` voice through [edge-tts](https://github.com/rany2/edge-tts).
+
+Dish photos in `img/food/` come from Wikimedia Commons under free licences; the author and licence are shown on each photo (see `PHOTOS` in `js/food.js`). `python tools/get_photos.py` fetches new candidates.
