@@ -100,6 +100,7 @@ document.addEventListener("change", e => {
   if (t.id === "set-goalmin") { S.settings.goalMin = +t.value; save(); render(); }
   if (t.id === "set-goaldays") { S.settings.goalDays = +t.value; save(); render(); }
   if (t.id === "set-dir") { S.settings.dir = t.value; save(); }
+  if (t.id === "set-auto") { S.settings.autoNext = t.value === "1"; save(); }
   if (t.id === "voicesel") { S.settings.voice = t.value; save(); ttsSpeak("Salamat!", {}, () => { }); }
   if (t.id === "pn-swap") { PN.swap = t.checked; pnPreview(); }
   if (t.id === "pn-cat") PN.cat = t.value;

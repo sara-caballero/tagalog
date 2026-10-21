@@ -104,7 +104,8 @@ const RENDER = {
       if (!q.retry) recordResult(q, it.id, ok);
       ctx.answer(q, ok, ok ? 5 : 0, b);
       if (dir !== "en2tl" || ok) speak(T.tl);
-      if (ok) { $("#fb", ctx.body).innerHTML = feedback("good", "Tama! Correct.", revealHTML(it)); setTimeout(() => { if (SESSION.st && ctx.body.isConnected && $("#fb", ctx.body)) ctx.next(); }, 1100); }
+      if (ok && S.settings.autoNext) { $("#fb", ctx.body).innerHTML = feedback("good", "Tama! Correct.", revealHTML(it)); const st = SESSION.st; setTimeout(() => { if (SESSION.st === st && $("#fb", ctx.body) && $("#fb", ctx.body).innerHTML) ctx.next(); }, 1600); }
+      else if (ok) { $("#fb", ctx.body).innerHTML = feedback("good", "Tama! Correct.", revealHTML(it, true)) + contBtn(); wireCont(ctx, $("#fb", ctx.body)); }
       else { $("#fb", ctx.body).innerHTML = feedback("bad", "Not quite.", revealHTML(it, true)) + contBtn(); wireCont(ctx, $("#fb", ctx.body)); speak(T.tl); }
     }));
   },

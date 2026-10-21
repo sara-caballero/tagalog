@@ -288,6 +288,7 @@ VIEWS.progress = () => {
       <p class="small muted">Time counts automatically while you use the site and are active. It stops after 2 minutes without a click, key or sound. Add class time from the calendar.</p></div>
     <div class="panel"><h3>Practice</h3>
       <label class="f" for="set-new">New words per day<select id="set-new">${[5, 10, 15, 20, 30].map(n => `<option value="${n}" ${S.settings.newPerDay === n ? "selected" : ""}>${n}</option>`).join("")}</select></label>
+      <label class="f" for="set-auto">After a right answer<select id="set-auto"><option value="0" ${S.settings.autoNext ? "" : "selected"}>Wait until I press Continue</option><option value="1" ${S.settings.autoNext ? "selected" : ""}>Go to the next question automatically</option></select></label>
       <label class="f" for="set-dir">Flashcards show first<select id="set-dir"><option value="tl" ${S.settings.dir === "tl" ? "selected" : ""}>Tagalog (you recall the meaning)</option><option value="en" ${S.settings.dir === "en" ? "selected" : ""}>English (you recall the Tagalog)</option><option value="mix" ${S.settings.dir === "mix" ? "selected" : ""}>A mix of both</option></select></label></div>
     <div class="panel"><h3>Voice</h3>
       <p class="small muted">${AUDIO.size} lesson phrases use a recorded Filipino voice. Your own words and sentences use your device's voice${fil ? " (Filipino)" : ", which has no Filipino voice: Edge on Windows has one"}.</p>
