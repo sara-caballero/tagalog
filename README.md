@@ -1,6 +1,6 @@
 # Tagalog, little by little
 
-A small website I use to learn Tagalog, built from my classes (trial class and lessons 1 to 3).
+A small website I use to learn Tagalog
 
 ## What it does
 
