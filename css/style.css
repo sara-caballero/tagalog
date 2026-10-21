@@ -513,11 +513,14 @@ svg.chart text{fill:var(--muted);font:12px var(--f-body)}
 .dish-photo{position:relative;margin:0;overflow:hidden}
 .dish-photo img{width:100%;height:100%;object-fit:cover;display:block}
 .dish-photo .dish-fallback{display:none;width:100%;height:100%}
-.dish-photo.noimg img,.dish-photo.noimg figcaption{display:none}
+.dish-photo.noimg img{display:none}
 .dish-photo.noimg .dish-fallback{display:block}
-.dish-photo figcaption{position:absolute;right:6px;bottom:6px;font-size:10.5px;line-height:1.2;padding:3px 7px;border-radius:999px;background:rgba(20,30,22,.55);color:#f6f1e6;max-width:calc(100% - 12px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.dish-photo figcaption a{color:inherit;text-decoration:none}
-.dish-photo figcaption a:hover{text-decoration:underline}
+.photo-credits{margin-top:14px;font-size:12.5px;color:var(--muted)}
+.photo-credits summary{cursor:pointer;width:max-content}
+.photo-credits p{margin:6px 0 2px;font-size:12.5px}
+.photo-credits ul{display:block;margin:0;padding-left:18px;columns:2 220px}
+.photo-credits li{font-size:12.5px;margin:0 0 2px}
+.photo-credits a{color:inherit}
 .dish-body{padding:16px 18px 18px;display:grid;gap:8px;align-content:start}
 .dish h4{font:400 28px/1.05 var(--f-display);margin:0}
 .dish p{font-size:15px}
