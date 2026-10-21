@@ -55,12 +55,12 @@ function startStep(id) {
 function runSwipe(ids, title, opts) {
   opts = opts || {};
   const body = openShell(title);
-  const queue = ids.slice(), seen = new Set(), missed = new Set();
-  let i = 0, known = 0;
+  const queue = ids.slice(), seen = new Set(), missed = new Set(), later = new Set(), tries = {}, total = ids.length;
+  let i = 0, known = 0, finished = 0;
   SESSION.st = { swipe: true };
   const dirFor = id => S.settings.dir === "mix" ? (level(id) >= 2 && Math.random() < .5 ? "en" : "tl") : S.settings.dir;
   function draw() {
-    setBar(i, queue.length);
+    setBar(finished, total);
     if (i >= queue.length) return finish();
     const id = queue[i], it = ITEMS[id], T = qtext(it), dir = dirFor(id), isNew = !S.cards[id];
     const front = dir === "tl" ? `<span class="prompt"><span class="big">${esc(T.tl)}</span></span>` : `<span class="em" style="font-size:46px">${it.em || ""}</span><span class="prompt"><span class="big" style="font-size:clamp(30px,6vw,44px)">${esc(T.en)}</span></span>`;
@@ -90,7 +90,12 @@ function runSwipe(ids, title, opts) {
       card.style.transform = `translateX(${ok ? 140 : -140}%) rotate(${ok ? 18 : -18}deg)`; card.style.opacity = "0";
       review(id, ok, { hinted: hinted > 0 }); addXP(1);
       if (!seen.has(id)) { seen.add(id); if (ok) known++; else missed.add(id); }
-      if (!ok) queue.splice(Math.min(queue.length, i + 4), 0, id);
+      tries[id] = (tries[id] || 0) + 1;
+      if (!ok && tries[id] < 2) queue.splice(Math.min(queue.length, i + 4), 0, id);
+      else {
+        finished++;
+        if (!ok) { later.add(id); const c = S.cards[id]; if (c) { c.due = startOfDay(Date.now()) + DAY; save(); } }
+      }
       i++; setTimeout(draw, 260);
     };
     card.addEventListener("click", () => { if (!moved) flip(); });
@@ -108,10 +113,10 @@ function runSwipe(ids, title, opts) {
   }
   function finish() {
     SESSION.swipe = null; setBar(1, 1); if (opts.onFinish) opts.onFinish();
-    const total = seen.size;
+    const got = [...missed].filter(id => !later.has(id)).length;
     body.innerHTML = `<div class="result"><span class="eyebrow">${esc(title)}</span><div class="score">${known}/${total}</div><h2>${total && known === total ? "Galing! You knew them all." : "Magaling! Session done."}</h2>
-      <p class="muted">${known} known at first sight${missed.size ? `, ${missed.size} practised until you got them` : ""}. Known words come back later; the others come back tomorrow.</p>
-      ${missed.size ? `<div class="missed"><span class="eyebrow">Practise these again</span>${[...missed].map(id => { const it = ITEMS[id], T = qtext(it); return `<div class="m"><span style="font-size:24px">${it.em || ""}</span><div class="main"><b class="tl">${esc(T.tl)}</b><br><span class="small muted">${esc(T.en)}</span></div>${playItem(id)}</div>`; }).join("")}</div>` : ""}
+      <p class="muted">${known} known at first sight${got ? `, ${got} learned on the second try` : ""}${later.size ? `, ${later.size} still tricky: ${later.size === 1 ? "it comes" : "they come"} back tomorrow` : ""}. Known words come back later, at growing intervals.</p>
+      ${missed.size ? `<div class="missed"><span class="eyebrow">${later.size ? "Back tomorrow" : "Practise these again"}</span>${[...(later.size ? later : missed)].map(id => { const it = ITEMS[id], T = qtext(it); return `<div class="m"><span style="font-size:24px">${it.em || ""}</span><div class="main"><b class="tl">${esc(T.tl)}</b><br><span class="small muted">${esc(T.en)}</span></div>${playItem(id)}</div>`; }).join("")}</div>` : ""}
       <div class="s-foot"><button class="btn primary" data-act="close-session" data-cont>Done</button></div></div>`;
     planHook();
   }
