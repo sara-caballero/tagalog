@@ -142,7 +142,8 @@ const NB = { q: "" };
 const allLessonNotes = L => L.topics.flatMap(t => (t.notes || []).map(n => Object.assign({ topic: t, lesson: L }, n))).filter(n => n.k !== "practice" && (n.k !== "tool" || n.tool === "age"));
 const nbNotes = L => allLessonNotes(L).filter(n => n.place !== "culture");
 const CULTURE_LESSON = { id: "culture", title: "Culture", code: "CULTURE" };
-const cultureNotes = () => [...LESSONS.flatMap(allLessonNotes).filter(n => n.place === "culture"), ...CULTURE.map(n => Object.assign({ topic: { title: n.topic || "Culture" }, lesson: CULTURE_LESSON }, n))];
+const cultureNotes = () => [...LESSONS.flatMap(allLessonNotes).filter(n => n.place === "culture"), ...CULTURE.map(n => Object.assign({ topic: { title: n.group || "Culture" }, lesson: CULTURE_LESSON }, n))];
+const CULTURE_GROUPS = () => [...new Set(cultureNotes().map(n => n.group || "Customs and language"))].sort((a, b) => a === "Customs and language" ? -1 : b === "Customs and language" ? 1 : 0);
 const noteTitle = n => n.tool === "age" ? "Say your age" : n.t;
 const lessonLabel = L => L.code === "SIMULA" ? "Trial class" : L.code === "CULTURE" ? "Kultura" : L.code.replace("ARALIN", "Aralin");
 const annKey = n => n.lesson.id + "|" + n.t;
@@ -150,8 +151,8 @@ const NBE = { id: null, lesson: "", back: "notebook" };
 const fmtText = t => esc(t).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
 const backLink = (h, label) => `<a class="btn ghost sm" href="#${h}" style="margin:-8px 0 14px -12px">${IC.back} ${label}</a>`;
 function noteHTML(n) {
-  const K = { grammar: "Grammar", culture: "Culture", trivia: "Did you know?", spanish: "Memory shortcut", tool: "Try it" };
-  let body = n.h || "";
+  const K = { grammar: "Grammar", culture: "Culture", trivia: "Did you know?", spanish: "Memory shortcut", tool: "Try it", dishes: "Food" };
+  let body = n.dishes ? dishesHTML() : n.h || "";
   if (n.tool === "age") body = `<p>Numbers link to taon (years) with -ng after a vowel and na after a consonant: dalawampu't walo<b>ng</b> taon, dalawampu't apat <b>na</b> taon.</p><div class="agetool"><label class="f" for="agein">Your age<input id="agein" type="number" min="1" max="99" value="${esc(S.profile.age || 28)}" style="width:120px"></label><div class="row"><span class="out" id="ageout"></span>${playBtn('data-act="sayage"', "Play")}</div><span class="small muted" id="ageen"></span></div>`;
   body = body.replace(/<table/g, "<div class='tablewrap'><table").replace(/<\/table>/g, "</table></div>").replace(/href='#ako'/g, "href='#intro'");
   const d = NOTE_DRILL[n.t], ak = annKey(n), mine = (S.annot || {})[ak], editing = NB.annEdit === ak;
@@ -188,7 +189,9 @@ LESSONS.forEach(L => {
 });
 VIEWS["nb-culture"] = () => {
   const own = (S.notes || []).filter(c => c.lesson === "culture");
-  return `${backLink("notebook", "Notebook")}${ph("Kultura", "Culture.", "Customs, history, food and everything about the Philippines that isn't grammar.")}${cultureNotes().map(noteHTML).join("")}
+  return `${backLink("notebook", "Notebook")}${ph("Kultura", "Culture.", "Customs, history, food and everything about the Philippines that isn't grammar.")}
+    <div class="row" style="margin:-14px 0 10px">${CULTURE_GROUPS().map((g, i) => `<button class="pill" data-act="nbjump" data-to="cg${i}">${esc(g)}</button>`).join("")}</div>
+    ${CULTURE_GROUPS().map((g, i) => `<section class="nbless" id="cg${i}" style="scroll-margin-top:20px"><h2>${esc(g)}</h2>${cultureNotes().filter(n => (n.group || "Customs and language") === g).map(noteHTML).join("")}</section>`).join("")}
     <div class="sh"><h2>My culture notes</h2><button class="btn primary" data-act="nnew" data-l="culture">${IC.plus} New note</button></div>
     ${own.length ? own.map(myNoteHTML).join("") : `<p class="muted">No notes of yours here yet.</p>`}`;
 };

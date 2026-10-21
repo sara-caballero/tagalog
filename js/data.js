@@ -187,6 +187,27 @@ I("matangkad","l3","plural","matangkad","tall",{syl:"ma-tang-kad",em:"🦒",bonu
 I("maganda","l3","plural","maganda","beautiful",{syl:"ma-gan-da",em:"🌺",ex:["Maganda si Tita Rosa.","Aunt Rosa is beautiful."],note:"The same maganda as in Magandang umaga."});
 I("gwapo","l3","plural","gwapo","handsome",{syl:"gwa-po",em:"😎",bonus:1,es:"Spanish guapo",ex:["Gwapo ang kuya ko.","My older brother is handsome."]});
 
+I("kaintayo","culture","foodculture","Kain tayo!","Let's eat!",{syl:"ka-IN TA-yo",em:"🍽️",lit:[["kain","eat"],["tayo","we, all of us (you included)"]],mn:"Kain is the root of pagkain (food). Tayo means you and me together.",note:"Said to anyone nearby when you start eating, even people you don't know."});
+I("kumainkana","culture","foodculture","Kumain ka na?","Have you eaten?",{em:"🍚",lit:[["kumain","ate"],["ka","you"],["na","already"]],note:"Often used like “How are you?”. It's a way of showing you care."});
+I("kumainnaako","culture","foodculture","Oo, kumain na ako.","Yes, I've eaten.",{em:"✅"});
+I("hindipakumain","culture","foodculture","Hindi pa ako kumakain.","I haven't eaten yet.",{em:"⏳",note:"Hindi pa = not yet, like in Aralin 3."});
+I("busognaako","culture","foodculture","Busog na ako.","I'm full.",{syl:"BU-sog na a-ko",em:"😌",mn:"So full your belly is as big as a BUS: busog."});
+I("busogpa","culture","foodculture","Salamat, busog pa ako.","Thanks, I'm still full.",{em:"🙏",note:"The polite way to answer “Kain tayo!” when you don't want to eat."});
+I("pahingikanin","culture","foodculture","Pahingi po ng kanin.","Could I have some rice, please?",{em:"🍚",lit:[["pahingi","may I have some"],["po","respect"],["ng","object marker"],["kanin","rice"]]});
+I("ulam","culture","foodculture","ulam","dish eaten with rice",{syl:"U-lam",em:"🍛",note:"Everything served with rice is ulam: adobo, fish, vegetables."});
+I("sabaw","culture","foodculture","sabaw","soup, broth",{syl:"sa-BAW",em:"🥣"});
+I("almusal","culture","foodculture","almusal","breakfast",{syl:"al-mu-SAL",em:"🍳",es:"Spanish almuerzo, which means lunch in Spain"});
+I("tanghalian","culture","foodculture","tanghalian","lunch",{syl:"tang-ha-LI-an",em:"🥗",mn:"From tanghali (noon), like in Magandang tanghali."});
+I("merienda","culture","foodculture","merienda","afternoon snack",{syl:"mer-YEN-da",em:"🍌",es:"Spanish merienda"});
+I("hapunan","culture","foodculture","hapunan","dinner",{syl:"ha-PU-nan",em:"🌙",mn:"From hapon (afternoon), like in Magandang hapon."});
+I("sawsawan","culture","foodculture","sawsawan","dipping sauce",{syl:"saw-sa-WAN",em:"🥢",mn:"Sawsaw means to dip."});
+I("suka","culture","foodculture","suka","vinegar",{syl:"su-KA",em:"🫙"});
+I("toyo","culture","foodculture","toyo","soy sauce",{syl:"TO-yo",em:"🍶"});
+I("patis","culture","foodculture","patis","fish sauce",{syl:"pa-TIS",em:"🐟"});
+I("kutsara","culture","foodculture","kutsara","spoon",{syl:"kut-SA-ra",em:"🥄",es:"Spanish cuchara"});
+I("tinidor","culture","foodculture","tinidor","fork",{syl:"ti-ni-DOR",em:"🍴",es:"Spanish tenedor"});
+I("pasalubong","culture","foodculture","pasalubong","food gift brought back from a trip",{syl:"pa-sa-LU-bong",em:"🎁"});
+
 const LESSONS = [
 { id:"trial", num:"0", code:"SIMULA", title:"First Words", tlTitle:"Unang Salita",
   blurb:"Greet people at any time of day, show respect with po, and introduce yourself.",
@@ -273,7 +294,7 @@ const LESSONS = [
     ]},
   { id:"food", title:"Food", tl:"Pagkain", items:["pagkain","kanin","gulay","tinapay","isda","manok","baboy","baka","karne"],
     notes:[
-      {k:"culture",place:"culture",t:"Rice at every meal",h:"<p>For many Filipinos a meal without <b>kanin</b> isn't really a meal. Two dishes you will meet everywhere: <b>adobo</b> (meat braised in vinegar, soy sauce and garlic) and <b>sinigang</b> (a sour tamarind soup).</p>"}
+      {k:"culture",place:"culture",group:"Food in the Philippines",t:"Rice at every meal",h:"<p>For many Filipinos a meal without <b>kanin</b> isn't really a meal. Two dishes you will meet everywhere: <b>adobo</b> (meat braised in vinegar, soy sauce and garlic) and <b>sinigang</b> (a sour tamarind soup).</p>"}
     ]},
   { id:"taste", title:"Taste", tl:"Lasa", items:["masarap","matamis","maalat","maanghang","maasim","lasa","sinigang","kendi","chips","sili","lemon","sobrangmasarap","angsarap","angtamis","angalat","anganghang","angasim","sarapnaman","tamisnaman","alatnaman","anghangnaman","asimnaman"],
     notes:[
@@ -289,7 +310,15 @@ const LESSONS = [
   ]}
 ];
 
-const CULTURE = [];
+const CULTURE = [
+ { k:"culture", group:"Food in the Philippines", t:"Kain tayo! Eating the Filipino way", h:"<p>When Filipinos start eating, they invite whoever is nearby: <b>Kain tayo!</b> (Let's eat!). It's a real invitation, but you don't have to accept. The polite answer is <b>Salamat, busog pa ako</b> (Thanks, I'm still full).</p><p><b>Kumain ka na?</b> (Have you eaten?) is used almost like “How are you?”. Answer <b>Oo, kumain na ako</b> or <b>Hindi pa</b>, using na and pa from Aralin 3.</p>" },
+ { k:"dishes", group:"Food in the Philippines", t:"12 dishes to know", dishes:true },
+ { k:"culture", group:"Food in the Philippines", t:"Ulam and five meals a day", h:"<p>A meal is rice plus <b>ulam</b>, the dish that goes with it. Many restaurants offer <b>unli-rice</b> (unlimited rice).</p><ul><li><b>almusal</b>: breakfast, often a -silog plate</li><li><b>tanghalian</b>: lunch, the main meal for many families</li><li><b>merienda</b>: a snack in the morning and again in the afternoon</li><li><b>hapunan</b>: dinner, eaten together</li></ul>" },
+ { k:"culture", group:"Food in the Philippines", t:"Spoon, fork and bare hands", h:"<p>Filipinos eat with a <b>kutsara</b> (spoon) in the right hand and a <b>tinidor</b> (fork) in the left. The spoon cuts and carries the food; knives are rarely on the table.</p><p><b>Kamayan</b> means eating with your hands. In a <b>boodle fight</b>, rice and dishes are laid out on banana leaves along a table and everyone eats together with their hands.</p>" },
+ { k:"culture", group:"Food in the Philippines", t:"Sawsawan: make your own sauce", h:"<p>Small dishes of <b>sawsawan</b> (dipping sauce) sit on the table so everyone can adjust the taste: <b>suka</b> (vinegar, often with garlic and chili), <b>toyo</b> (soy sauce), <b>patis</b> (fish sauce) and calamansi. Mixing toyo and calamansi is a classic.</p>" },
+ { k:"culture", group:"Food in the Philippines", t:"Pasalubong and fiestas", h:"<p>Coming back from a trip, you bring <b>pasalubong</b>: food from that place for family, friends and colleagues. Each town has its own specialities.</p><p>Every town also celebrates its patron saint with a <b>fiesta</b>, with lechon, pancit and open houses where anyone can come and eat.</p>" },
+ { k:"culture", group:"Food in the Philippines", t:"Words at the table", h:"<p>The words in this section are in your Wordbook under <b>Filipino food</b>: kain tayo, kumain ka na, busog, ulam, sabaw, the meals, the sauces, kutsara, tinidor and pasalubong.</p><p><a class='btn sm' href='#wordbook'>Open the Wordbook</a> <button class='btn sm' data-act='waddcat' data-c='filfood'>Add them to Practice</button></p>" }
+];
 
 const DRILLS = [
  { id:"siang", lesson:"l2", title:"Si or ang?", tl:"Si o ang?", desc:"Name → si. General word → ang.", opts:["Si","Ang"], items:[

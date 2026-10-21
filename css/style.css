@@ -506,3 +506,11 @@ svg.chart text{fill:var(--muted);font:12px var(--f-body)}
 .nbcard.culture{background:var(--deep);border-color:var(--deep);color:var(--deep-ink)}
 .nbcard.culture .eyebrow{color:var(--gold)}
 .nbcard.culture .muted{color:inherit;opacity:.75}
+.dishgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin-top:6px}
+.dish{border-radius:18px;overflow:hidden;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;min-width:0}
+.dish-art{background:#f3e9d7;aspect-ratio:240/170;max-width:100%;display:grid;place-items:center}
+.dish-art svg{width:100%;height:100%;display:block}
+.dish-body{padding:16px 18px 18px;display:grid;gap:8px;align-content:start}
+.dish h4{font:400 28px/1.05 var(--f-display);margin:0}
+.dish p{font-size:15px}
+.note.dishes{padding-bottom:22px}

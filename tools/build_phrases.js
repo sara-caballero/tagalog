@@ -5,7 +5,7 @@ const path = require("path");
 const root = path.join(__dirname, "..");
 const ctx = {};
 vm.createContext(ctx);
-vm.runInContext(fs.readFileSync(path.join(root, "js/data.js"), "utf8") + "\nthis.ITEMS = ITEMS; this.LESSONS = LESSONS; this.DRILLS = DRILLS; this.SCENES = SCENES;", ctx);
+vm.runInContext(fs.readFileSync(path.join(root, "js/data.js"), "utf8") + "\n" + fs.readFileSync(path.join(root, "js/food.js"), "utf8") + "\nthis.ITEMS = ITEMS; this.LESSONS = LESSONS; this.DRILLS = DRILLS; this.SCENES = SCENES; this.DISHES = DISHES;", ctx);
 
 const clean = t => String(t)
   .replace(/\p{Extended_Pictographic}|️|‍/gu, "")
@@ -30,6 +30,7 @@ for (const it of Object.values(ctx.ITEMS)) {
 }
 for (const l of ctx.LESSONS) for (const t of l.topics) for (const n of t.notes || []) if (n.say) n.say.split(/\s*\.\.\.\s*/).forEach(add);
 for (const d of ctx.DRILLS) for (const x of d.items) add(x.a === "-ng" ? x.q.replace("___", "ng") : x.q.replace("___", x.a));
+for (const d of ctx.DISHES) add(d.name);
 for (const s of ctx.SCENES) for (const st of s.steps) { if (st.tl) add(st.tl); (st.opts || []).forEach(o => add(o.t)); }
 ["Magandang umaga! Kumusta ka?", "Salamat!", "Magandang umaga!", "Magandang tanghali!", "Magandang hapon!", "Magandang gabi!", "Ikinagagalak kitang makilala!", "Wala akong palayaw."].forEach(add);
 

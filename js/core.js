@@ -165,7 +165,8 @@ const CATS = [
   { id: "family", name: "Family", tl: "Pamilya", topics: ["family", "siang"] },
   { id: "food", name: "Food and taste", tl: "Pagkain at lasa", topics: ["food", "taste"] },
   { id: "napa", name: "Now, still, more", tl: "Na at pa", topics: ["napa"] },
-  { id: "people", name: "Describing people", tl: "Tao", topics: ["plural"] }
+  { id: "people", name: "Describing people", tl: "Tao", topics: ["plural"] },
+  { id: "filfood", name: "Filipino food", tl: "Pagkaing Pilipino", topics: ["foodculture"] }
 ];
 const TOPIC_CAT = {}; CATS.forEach(c => c.topics.forEach(t => TOPIC_CAT[t] = c.id));
 const catOf = it => it.cat || TOPIC_CAT[it.topic] || "u:My words";
