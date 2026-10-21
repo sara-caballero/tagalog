@@ -118,7 +118,8 @@ function addXP(n) {
 }
 
 function newToday() { return S.daily.date === dkey(Date.now()) ? S.daily.n : 0; }
-function countNew() { const t = dkey(Date.now()); if (S.daily.date !== t) S.daily = { date: t, n: 0 }; S.daily.n++; }
+function newLimit() { return S.settings.newPerDay + (S.daily.date === dkey(Date.now()) ? (S.daily.bonus || 0) : 0); }
+function countNew() { const t = dkey(Date.now()); if (S.daily.date !== t) S.daily = { date: t, n: 0, bonus: 0 }; S.daily.n++; }
 function review(id, ok, o) {
   const now = Date.now(); let c = S.cards[id];
   if (!c) {

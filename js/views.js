@@ -113,9 +113,10 @@ function practicePool(cats) {
   const ids = allIds().filter(id => !cats.length || cats.includes(catOf(ITEMS[id])) || (cats.includes("tricky") && isTricky(id)));
   const now = Date.now();
   const due = ids.filter(id => S.cards[id] && S.cards[id].due <= now).sort((a, b) => S.cards[a].due - S.cards[b].due);
-  const newLeft = Math.max(0, S.settings.newPerDay - newToday());
-  const fresh = ids.filter(id => !S.cards[id] && inPractice(id)).slice(0, newLeft);
-  return { ids, due, fresh, newLeft };
+  const newLeft = Math.max(0, newLimit() - newToday());
+  const waitingAll = ids.filter(id => !S.cards[id] && inPractice(id));
+  const fresh = waitingAll.slice(0, newLeft);
+  return { ids, due, fresh, newLeft, waiting: waitingAll.length - fresh.length };
 }
 VIEWS.practice = () => {
   const cats = S.settings.pcats.filter(c => c === "tricky" || catList().some(x => x.id === c)), pool = practicePool(cats);
@@ -129,7 +130,7 @@ VIEWS.practice = () => {
       ${allIds().some(isTricky) ? `<button class="catchip ${cats.includes("tricky") ? "on" : ""}" data-act="pcat" data-c="tricky" aria-pressed="${cats.includes("tricky")}">Tricky words <i>${allIds().filter(isTricky).length}</i></button>` : ""}
       ${catList().map(c => { const k = counts(c.id); return k.n ? `<button class="catchip ${cats.includes(c.id) ? "on" : ""}" data-act="pcat" data-c="${esc(c.id)}" aria-pressed="${cats.includes(c.id)}">${esc(c.name)}${k.due ? ` <i>${k.due}</i>` : ""}</button>` : ""; }).join("")}</div></div>
     <div><h3 style="margin-bottom:12px">How?</h3><div class="modes">${MODES.map(([k, t, d, ic]) => `<button class="mode ${S.settings.mode === k ? "on" : ""}" data-act="pmode" data-m="${k}" aria-pressed="${S.settings.mode === k}">${ic}<b>${t}</b><span>${d}</span></button>`).join("")}</div></div>
-    <div class="startbar"><div><div class="n">${pool.due.length + pool.fresh.length ? `${pool.due.length} to review · ${pool.fresh.length} new` : "Nothing due today"}</div><span style="opacity:.8" class="small">${pool.due.length + pool.fresh.length ? `<b>To review</b>: words whose review day has come. <b>New</b>: words you added to Practice but haven\'t practised yet (${newToday()} of ${S.settings.newPerDay} new today).` : "You can still practise these words: misses will come back sooner."}</span></div>
+    <div class="startbar"><div><div class="n">${pool.due.length + pool.fresh.length ? `${pool.due.length} to review · ${pool.fresh.length} new` : "Nothing due today"}</div><span style="opacity:.8" class="small">${pool.due.length + pool.fresh.length ? `<b>To review</b>: words whose review day has come. <b>New</b>: words you added to Practice but haven\'t practised yet (${newToday()} of ${newLimit()} new today).${pool.waiting ? ` <b>${pool.waiting} more</b> are waiting for the next days.` : ""}` : pool.waiting ? `You've had your ${newLimit()} new words today. ${pool.waiting} more are waiting for the next days.` : "You can still practise these words: misses will come back sooner."}</span>${pool.waiting ? `<div style="margin-top:10px"><button class="btn sm" style="background:transparent;color:inherit;border-color:rgba(255,255,255,.35)" data-act="pmore">${IC.plus} Learn 10 more today</button></div>` : ""}</div>
       <button class="btn big" data-act="pstart">${IC.play} ${pool.due.length + pool.fresh.length ? "Start" : "Practise anyway"}</button></div>
     <p class="small muted">Flashcards work like Duocards: listen, try to remember, tap to check, then swipe right if you knew it or left if you didn't. A word you know comes back after 1, 3, 7, 14, 30 days and more. A word you miss comes back in the same session until you get it.</p>
   </div>`;

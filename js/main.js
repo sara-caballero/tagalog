@@ -12,6 +12,7 @@ const ACTIONS = {
     if (c === "all") a = []; else a = a.includes(c) ? a.filter(x => x !== c) : [...a, c];
     S.settings.pcats = a; save(); render();
   },
+  pmore() { const t = dkey(Date.now()); if (S.daily.date !== t) S.daily = { date: t, n: 0, bonus: 0 }; S.daily.bonus = (S.daily.bonus || 0) + 10; save(); render(); toast("10 more new words for today"); },
   pmode(t) { S.settings.mode = t.dataset.m; save(); render(); },
   wbcat(t) { WB.cat = t.dataset.c; WB.open = null; wbFilter(); },
   wopen(t, e) {
