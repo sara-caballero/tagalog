@@ -45,6 +45,16 @@ mp3/              recorded phrases
 tools/            audio scripts
 ```
 
+## Adding culture notes
+
+Culture notes live in the Notebook's Culture section. Add an entry to `CULTURE` in `js/data.js`:
+
+```js
+{ k: "culture", t: "Fiesta", topic: "Celebrations", h: "<p>Every town has its own fiesta…</p>" }
+```
+
+Notes inside a lesson can also be moved there with `place: "culture"`.
+
 ## Adding a lesson
 
 1. Add the words with `I(...)` and a lesson entry in `LESSONS` in `js/data.js`.

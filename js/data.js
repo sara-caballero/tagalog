@@ -211,8 +211,8 @@ const LESSONS = [
     ]},
   { id:"taglish", title:"Tagalog and Taglish", tl:"Wika", items:["tagalogako","marunong","lugar"],
     notes:[
-      {k:"trivia",t:"Where the word Tagalog comes from",h:"<p>Tagalog comes from <b>taga-ilog</b>, “from the river” (taga = from, ilog = river). It first described the people living along the Pasig River in Luzon, and later their language.</p><p>In 1937 Tagalog was chosen as the basis of the national language, now called <b>Filipino</b>.</p>"},
-      {k:"culture",t:"Taglish = Tagalog + English",h:"<p>Many Filipinos mix Tagalog and English in daily conversation. It is normal and natural, so use it whenever you are missing a word.</p><p>Tagalog: Maganda ang <b>lugar</b>.<br>Taglish: Maganda ang <b>place</b>.<br>English: The place is beautiful.</p>"}
+      {k:"trivia",place:"culture",t:"Where the word Tagalog comes from",h:"<p>Tagalog comes from <b>taga-ilog</b>, “from the river” (taga = from, ilog = river). It first described the people living along the Pasig River in Luzon, and later their language.</p><p>In 1937 Tagalog was chosen as the basis of the national language, now called <b>Filipino</b>.</p>"},
+      {k:"culture",place:"culture",t:"Taglish = Tagalog + English",h:"<p>Many Filipinos mix Tagalog and English in daily conversation. It is normal and natural, so use it whenever you are missing a word.</p><p>Tagalog: Maganda ang <b>lugar</b>.<br>Taglish: Maganda ang <b>place</b>.<br>English: The place is beautiful.</p>"}
     ]}
   ]},
 { id:"l1", num:"1", code:"ARALIN 1", title:"Better Tagalog", tlTitle:"Mas Mahusay na Tagalog",
@@ -252,7 +252,7 @@ const LESSONS = [
     ]},
   { id:"family", title:"Family", tl:"Pamilya", items:["tatay","nanay","magulang","anak","bata","kuya","ate","kapatid","lolo","lola","tito","tita","pinsan","pamangkin","biyenan","bayaw","hipag","kamaganak","pangalannanay","angpangalannanay","siyaaysi","kumustapamilya","masayapamilya","okaylangsila","masayakaba","oomasaya","hindimasaya","manopo"],
     notes:[
-      {k:"culture",t:"Mano po",h:"<p>A traditional gesture of respect. Take an elder's hand and gently touch the back of it to your forehead while saying <b>“mano po”</b>. Do it with grandparents, older relatives and elders when you arrive, enter their house or say goodbye. It shows respect and asks for their blessing.</p>"},
+      {k:"culture",place:"culture",t:"Mano po",h:"<p>A traditional gesture of respect. Take an elder's hand and gently touch the back of it to your forehead while saying <b>“mano po”</b>. Do it with grandparents, older relatives and elders when you arrive, enter their house or say goodbye. It shows respect and asks for their blessing.</p>"},
       {k:"culture",t:"Kuya and ate are everywhere",h:"<p>Filipinos call older friends, drivers, vendors and staff <b>kuya</b> or <b>ate</b>. It is warm and polite: “Kuya, isa pa po!”</p>"},
       {k:"grammar",t:"Ba makes a yes/no question",h:"<p>Add <b>ba</b> after the first phrase: Masaya ka → Masaya ka <b>ba</b>? (Are you happy?)</p><p>To say <b>not</b>, start with hindi: <b>Hindi ako masaya.</b></p>"}
     ]},
@@ -273,7 +273,7 @@ const LESSONS = [
     ]},
   { id:"food", title:"Food", tl:"Pagkain", items:["pagkain","kanin","gulay","tinapay","isda","manok","baboy","baka","karne"],
     notes:[
-      {k:"culture",t:"Rice at every meal",h:"<p>For many Filipinos a meal without <b>kanin</b> isn't really a meal. Two dishes you will meet everywhere: <b>adobo</b> (meat braised in vinegar, soy sauce and garlic) and <b>sinigang</b> (a sour tamarind soup).</p>"}
+      {k:"culture",place:"culture",t:"Rice at every meal",h:"<p>For many Filipinos a meal without <b>kanin</b> isn't really a meal. Two dishes you will meet everywhere: <b>adobo</b> (meat braised in vinegar, soy sauce and garlic) and <b>sinigang</b> (a sour tamarind soup).</p>"}
     ]},
   { id:"taste", title:"Taste", tl:"Lasa", items:["masarap","matamis","maalat","maanghang","maasim","lasa","sinigang","kendi","chips","sili","lemon","sobrangmasarap","angsarap","angtamis","angalat","anganghang","angasim","sarapnaman","tamisnaman","alatnaman","anghangnaman","asimnaman"],
     notes:[
@@ -288,6 +288,8 @@ const LESSONS = [
     ]}
   ]}
 ];
+
+const CULTURE = [];
 
 const DRILLS = [
  { id:"siang", lesson:"l2", title:"Si or ang?", tl:"Si o ang?", desc:"Name → si. General word → ang.", opts:["Si","Ang"], items:[

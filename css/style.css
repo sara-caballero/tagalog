@@ -503,3 +503,6 @@ svg.chart text{fill:var(--muted);font:12px var(--f-body)}
 .eh .small:nth-child(2){overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .eh b{text-align:right}
 @media (max-width:560px){.eh{grid-template-columns:56px minmax(0,1fr) 44px}.eh .meter{display:none}.skillrow{grid-template-columns:96px 1fr 42px}}
+.nbcard.culture{background:var(--deep);border-color:var(--deep);color:var(--deep-ink)}
+.nbcard.culture .eyebrow{color:var(--gold)}
+.nbcard.culture .muted{color:inherit;opacity:.75}

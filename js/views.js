@@ -139,9 +139,12 @@ VIEWS.practice = () => {
 const NOTE_DRILL = { "Rin or din? Both mean too": "rindin", "Maganda means beautiful, and also good": "time", "Ng or ang after gusto?": "gustoayaw", "Double it for emphasis": "linker", "Very, very: sobra and doubling": "linker",
   "Name → si. General word → ang.": "siang", "Na = already / now. Pa = still / yet / more.": "napa", "Exclaim it: Ang + root + ng": "exclaim" };
 const NB = { q: "" };
-const nbNotes = L => L.topics.flatMap(t => (t.notes || []).map(n => Object.assign({ topic: t, lesson: L }, n))).filter(n => n.k !== "practice" && (n.k !== "tool" || n.tool === "age"));
+const allLessonNotes = L => L.topics.flatMap(t => (t.notes || []).map(n => Object.assign({ topic: t, lesson: L }, n))).filter(n => n.k !== "practice" && (n.k !== "tool" || n.tool === "age"));
+const nbNotes = L => allLessonNotes(L).filter(n => n.place !== "culture");
+const CULTURE_LESSON = { id: "culture", title: "Culture", code: "CULTURE" };
+const cultureNotes = () => [...LESSONS.flatMap(allLessonNotes).filter(n => n.place === "culture"), ...CULTURE.map(n => Object.assign({ topic: { title: n.topic || "Culture" }, lesson: CULTURE_LESSON }, n))];
 const noteTitle = n => n.tool === "age" ? "Say your age" : n.t;
-const lessonLabel = L => L.code === "SIMULA" ? "Trial class" : L.code.replace("ARALIN", "Aralin");
+const lessonLabel = L => L.code === "SIMULA" ? "Trial class" : L.code === "CULTURE" ? "Kultura" : L.code.replace("ARALIN", "Aralin");
 const annKey = n => n.lesson.id + "|" + n.t;
 const NBE = { id: null, lesson: "", back: "notebook" };
 const fmtText = t => esc(t).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
@@ -155,11 +158,11 @@ function noteHTML(n) {
   const annot = editing ? `<div class="annot edit"><label class="f" for="annot-ta">My explanation<textarea id="annot-ta" rows="4" placeholder="Write it in your own words, add examples from class…">${esc(mine || "")}</textarea></label>
       <div class="row"><button class="btn sm primary" data-act="annsave" data-k="${esc(ak)}">Save</button><button class="btn sm ghost" data-act="anncancel">Cancel</button>${mine ? `<button class="btn sm ghost" style="color:var(--bad)" data-act="anndel" data-k="${esc(ak)}">Remove</button>` : ""}</div></div>`
     : mine ? `<div class="annot"><div class="row" style="justify-content:space-between"><span class="k">My explanation</span><button class="btn sm ghost" data-act="annedit" data-k="${esc(ak)}">Edit</button></div><div class="txt">${fmtText(mine)}</div></div>` : "";
-  return `<article class="note ${n.k}"><span class="k">${K[n.k] || ""} · ${esc(n.topic.title)}</span><div class="row" style="justify-content:space-between"><h3>${esc(noteTitle(n))}</h3>${n.say ? playText(n.say) : ""}</div>${body}${annot}
+  return `<article class="note ${n.k}"><span class="k">${K[n.k] || ""} · ${esc(n.place === "culture" && n.lesson.id !== "culture" ? lessonLabel(n.lesson) : n.topic.title)}</span><div class="row" style="justify-content:space-between"><h3>${esc(noteTitle(n))}</h3>${n.say ? playText(n.say) : ""}</div>${body}${annot}
     <div class="row">${d ? `<button class="btn sm" data-act="drill" data-id="${d}">${IC.play} Practise this rule</button>` : ""}${!mine && !editing ? `<button class="btn sm ghost" data-act="annedit" data-k="${esc(ak)}">${IC.pen} Add my explanation</button>` : ""}</div></article>`;
 }
 function myNoteHTML(c) {
-  const L = c.lesson && LESSON_BY_ID[c.lesson];
+  const L = c.lesson === "culture" ? CULTURE_LESSON : c.lesson && LESSON_BY_ID[c.lesson];
   return `<article class="note mine"><span class="k">My note${L ? " · " + esc(L.title) : ""} · ${new Date(c.updated || c.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</span>
     <div class="row" style="justify-content:space-between"><h3>${esc(c.title)}</h3><span class="row" style="gap:4px"><button class="btn sm ghost" data-act="nedit" data-id="${c.id}">${IC.pen} Edit</button>${NB.del === c.id ? `<button class="btn sm" style="color:var(--bad)" data-act="ndel2" data-id="${c.id}">Delete?</button>` : `<button class="x" data-act="ndel" data-id="${c.id}" aria-label="Delete note">${IC.trash.replace("<svg", '<svg width="18" height="18"')}</button>`}</span></div>
     ${c.text ? `<div class="rawnote">${fmtText(c.text)}</div>` : ""}${c.n ? `<p class="small muted">${c.n} words added to <a href="#wordbook">${esc(catName(c.cat))}</a></p>` : ""}</article>`;
@@ -173,7 +176,7 @@ VIEWS.notebook = () => {
   return `${ph("Notebook", "Notebook.", "The grammar and culture notes from each class, plus your own. Pick a lesson, or search.")}
     <div class="tools"><label class="sr" for="nbq">Search the notebook</label><input id="nbq" type="search" placeholder="Search: rin, na, po, si, ang…" value="${esc(NB.q)}" autocomplete="off"><button class="btn primary" data-act="nnew">${IC.plus} New note</button></div>
     <div id="nbresults"></div>
-    <div class="nbcards" id="nbcards"><a class="nbcard mine" href="#nb-mine"><span class="eyebrow">Your own</span><h3>My notes</h3><p class="muted small">${mine.length ? mine.length + " notes" : "Write your own notes and explanations here"}</p><ul>${mine.slice().sort((a, b) => (b.updated || b.date) - (a.updated || a.date)).slice(0, 4).map(c => `<li>${esc(c.title)}</li>`).join("")}</ul></a>${cards}</div>`;
+    <div class="nbcards" id="nbcards"><a class="nbcard culture" href="#nb-culture"><span class="eyebrow">Kultura</span><h3>Culture</h3><p class="muted small">${cultureNotes().length} notes${(S.notes || []).filter(c => c.lesson === "culture").length ? ` · ${(S.notes || []).filter(c => c.lesson === "culture").length} of yours` : ""}</p><ul>${cultureNotes().slice(0, 4).map(n => `<li>${esc(noteTitle(n))}</li>`).join("")}</ul></a><a class="nbcard mine" href="#nb-mine"><span class="eyebrow">Your own</span><h3>My notes</h3><p class="muted small">${mine.length ? mine.length + " notes" : "Write your own notes and explanations here"}</p><ul>${mine.slice().sort((a, b) => (b.updated || b.date) - (a.updated || a.date)).slice(0, 4).map(c => `<li>${esc(c.title)}</li>`).join("")}</ul></a>${cards}</div>`;
 };
 LESSONS.forEach(L => {
   VIEWS["nb-" + L.id] = () => {
@@ -183,6 +186,12 @@ LESSONS.forEach(L => {
     ${own.length ? own.map(myNoteHTML).join("") : `<p class="muted">No notes of yours here yet.</p>`}`;
   };
 });
+VIEWS["nb-culture"] = () => {
+  const own = (S.notes || []).filter(c => c.lesson === "culture");
+  return `${backLink("notebook", "Notebook")}${ph("Kultura", "Culture.", "Customs, history, food and everything about the Philippines that isn't grammar.")}${cultureNotes().map(noteHTML).join("")}
+    <div class="sh"><h2>My culture notes</h2><button class="btn primary" data-act="nnew" data-l="culture">${IC.plus} New note</button></div>
+    ${own.length ? own.map(myNoteHTML).join("") : `<p class="muted">No notes of yours here yet.</p>`}`;
+};
 VIEWS["nb-mine"] = () => `${backLink("notebook", "Notebook")}${ph("Your own", "My notes.", "")}<div class="row" style="margin:-14px 0 20px"><button class="btn primary" data-act="nnew">${IC.plus} New note</button><a class="btn" href="#notes">Paste class notes</a></div>
   ${(S.notes || []).length ? S.notes.slice().sort((a, b) => (b.updated || b.date) - (a.updated || a.date)).map(myNoteHTML).join("") : `<div class="empty">No notes yet. Write your own explanations, questions for your teacher, or anything from class.</div>`}`;
 VIEWS["nb-edit"] = () => {
@@ -190,7 +199,7 @@ VIEWS["nb-edit"] = () => {
   return `${backLink(NBE.back, "Back")}${ph("Notebook", c ? "Edit note." : "New note.", "")}
   <form id="noteform" class="pastebox" autocomplete="off">
     <div class="grid2"><label class="f" for="ne-title">Title<input id="ne-title" type="text" required value="${esc(c ? c.title : "")}" placeholder="e.g. When to use po"></label>
-    <label class="f" for="ne-lesson">Lesson<select id="ne-lesson"><option value="">No lesson</option>${LESSONS.map(L => `<option value="${L.id}" ${lesson === L.id ? "selected" : ""}>${esc(lessonLabel(L))} · ${esc(L.title)}</option>`).join("")}</select></label></div>
+    <label class="f" for="ne-lesson">Lesson<select id="ne-lesson"><option value="">No lesson</option>${LESSONS.map(L => `<option value="${L.id}" ${lesson === L.id ? "selected" : ""}>${esc(lessonLabel(L))} · ${esc(L.title)}</option>`).join("")}<option value="culture" ${lesson === "culture" ? "selected" : ""}>Culture</option></select></label></div>
     <label class="f" for="ne-text">Note<textarea id="ne-text" rows="14" placeholder="Write anything: an explanation in your own words, examples from class, questions for your teacher…">${esc(c ? c.text : "")}</textarea></label>
     <p class="small muted">Tip: put a word between **double stars** to make it bold.</p>
     <div class="row"><button class="btn primary">Save note</button><a class="btn ghost" href="#${NBE.back}">Cancel</a>${c ? (NB.del === c.id ? `<button type="button" class="btn sm" style="color:var(--bad);margin-left:auto" data-act="ndel2" data-id="${c.id}">Delete this note?</button>` : `<button type="button" class="btn ghost" style="color:var(--bad);margin-left:auto" data-act="ndel" data-id="${c.id}">${IC.trash} Delete</button>`) : ""}</div>
@@ -200,7 +209,7 @@ function nbSearch() {
   const box = $("#nbresults"); if (!box) return;
   const q = norm(NB.q); $("#nbcards").hidden = !!q;
   if (!q) { box.innerHTML = ""; return; }
-  const hits = LESSONS.flatMap(nbNotes).filter(n => norm(noteTitle(n) + " " + (n.h || "").replace(/<[^>]+>/g, " ") + " " + ((S.annot || {})[annKey(n)] || "")).includes(q));
+  const hits = [...LESSONS.flatMap(nbNotes), ...cultureNotes()].filter(n => norm(noteTitle(n) + " " + (n.h || "").replace(/<[^>]+>/g, " ") + " " + ((S.annot || {})[annKey(n)] || "")).includes(q));
   const mine = (S.notes || []).filter(c => norm(c.title + " " + c.text).includes(q));
   box.innerHTML = hits.length || mine.length ? mine.map(myNoteHTML).join("") + hits.map(n => `<p class="small muted" style="margin:6px 0">${esc(lessonLabel(n.lesson))} · ${esc(n.lesson.title)}</p>` + noteHTML(n)).join("") : `<div class="empty">Nothing found for “${esc(NB.q)}”.</div>`;
   updateAge();
