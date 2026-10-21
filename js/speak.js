@@ -146,7 +146,7 @@ const TSCEN = [
   ["lola", "Si Lola", "Visit an elder: use po and opo"]];
 function tutorRules() {
   const p = S.profile, sc = TSCEN.find(s => s[0] === Tutor.scen);
-  const vocab = ALL_IDS.filter(id => !ITEMS[id].pat).map(id => ITEMS[id].tl).join("; ");
+  const vocab = allIds().filter(id => !ITEMS[id].pat).map(id => ITEMS[id].tl).join("; ");
   return `You are "Ate Mia", a warm, encouraging Filipina Tagalog tutor chatting by text with a beginner${p.name ? ` named ${p.name}` : ""}.
 The learner has studied: greetings by time of day, po/opo, introducing yourself (name, full name, nickname, age), hobbies (pag- words), taga/sa for places, jobs, gusto/ayaw, feelings (gutom, masaya, antok, pagod, takot, malungkot...), sobra and doubling (masayang masaya), family words, si vs ang, ba questions, na vs pa, food and tastes (masarap, matamis, maalat, maanghang, maasim, Ang sarap ng...!, naman), sina and ang mga.
 Known vocabulary: ${vocab}.

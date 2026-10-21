@@ -129,7 +129,7 @@ const RENDER = {
   },
   build(ctx, q) {
     const it = q.item, T = qtext(it), toks = tokens(T.tl);
-    const pool = shuffle(ALL_IDS.filter(id => id !== it.id)).flatMap(id => tokens(qtext(ITEMS[id]).tl)).filter(w => !toks.some(t => t.toLowerCase() === w.toLowerCase()) && !w.includes("…"));
+    const pool = shuffle(allIds().filter(id => id !== it.id)).flatMap(id => tokens(qtext(ITEMS[id]).tl)).filter(w => !toks.some(t => t.toLowerCase() === w.toLowerCase()) && !w.includes("…"));
     const extra = [...new Set(pool)].slice(0, 2);
     const bank = shuffle([...toks, ...extra].map((w, i) => ({ w, i })));
     const chosen = [];
