@@ -19,22 +19,25 @@ function buildPlan() {
   if (total < remaining && learned.length >= 6) blocks.push({ k: "mixed", label: "Mixed practice", est: Math.max(4, remaining - total) });
   return blocks;
 }
+const nextBlock = () => PLAN.blocks.findIndex(b => !b.done);
 function planOverview() {
-  const body = openShell(`My ${goalMin()} minutes`), B = PLAN.blocks, done = PLAN.i >= B.length, m = minsOn(dkey(Date.now()));
-  setBar(Math.min(PLAN.i, B.length), B.length || 1);
+  const body = openShell(`My ${goalMin()} minutes`), B = PLAN.blocks, m = minsOn(dkey(Date.now()));
+  PLAN.i = nextBlock();
+  const done = PLAN.i < 0, started = B.some(b => b.done);
+  setBar(B.filter(b => b.done).length, B.length || 1);
   const sum = B.filter(b => !b.done).reduce((a, b) => a + b.est, 0);
   body.innerHTML = `<div class="planbox"><span class="eyebrow">Today's plan</span>
-    <h2>${done ? (m >= goalMin() ? "Goal done! Magaling!" : "Plan complete!") : PLAN.i ? "Keep going." : `Your ${goalMin()} minutes.`}</h2>
-    <p class="muted">${m} of ${goalMin()} minutes today${done ? "" : ` · about ${sum} minutes left in this plan`}</p>
+    <h2>${done ? (m >= goalMin() ? "Goal done! Magaling!" : "Plan complete!") : started ? "Keep going." : `Your ${goalMin()} minutes.`}</h2>
+    <p class="muted">${m} of ${goalMin()} minutes today${done ? "" : ` · about ${sum} minutes left in this plan`}</p>${done ? "" : `<p class="small muted" style="margin-top:-8px">${started ? "Tap the one you want to do next, or Continue to go in order." : "Tap the one you want to start with, or Start to go in order."}</p>`}
     <div class="meter"><i style="width:${Math.min(100, m / goalMin() * 100)}%"></i></div>
-    <ol class="planlist">${B.map((b, i) => `<li class="${b.done ? "done" : i === PLAN.i ? "cur" : ""}"><span class="dot">${b.done ? IC.check : i + 1}</span><span class="pl"><b>${esc(b.label)}</b><small>about ${b.est} min${b.skipped ? " · nothing to do" : ""}</small></span></li>`).join("")}</ol>
+    <ol class="planlist">${B.map((b, i) => `<li class="${b.done ? "done" : i === PLAN.i ? "cur" : ""}"><button class="plrow" data-act="plan-pick" data-i="${i}"${b.done ? " disabled" : ""}><span class="dot">${b.done ? IC.check : i + 1}</span><span class="pl"><b>${esc(b.label)}</b><small>${b.done ? (b.skipped ? "nothing to do" : "done") : `about ${b.est} min`}</small></span>${b.done ? "" : `<span class="go">${IC.arrow}</span>`}</button></li>`).join("")}</ol>
     <div class="s-foot">${done ? `<button class="btn" data-act="plan-more">Keep going: mixed practice</button><button class="btn primary" data-act="plan-stop" data-cont>Done for today</button>`
-      : `<button class="btn" data-act="plan-stop">Not now</button><button class="btn primary big" data-act="plan-go" data-cont>${PLAN.i ? "Continue" : "Start"} ${IC.arrow}</button>`}</div></div>`;
+      : `<button class="btn" data-act="plan-stop">Not now</button><button class="btn primary big" data-act="plan-go" data-cont>${started ? "Continue" : "Start"} ${IC.arrow}</button>`}</div></div>`;
 }
 function runBlock() {
   const b = PLAN.blocks[PLAN.i];
   if (!b) return planOverview();
-  const skip = () => { b.done = true; b.skipped = true; PLAN.i++; runBlock(); };
+  const skip = () => { b.done = true; b.skipped = true; PLAN.i = nextBlock(); runBlock(); };
   if (b.k === "review") { const ids = shuffle(dueIds()).slice(0, 40); return ids.length ? runSwipe(ids, "Review") : skip(); }
   if (b.k === "step") return startStep(b.id);
   if (b.k === "new") { const ids = practicePool([]).fresh; return ids.length ? runSwipe(ids, "New words") : skip(); }
@@ -47,9 +50,9 @@ function planHook() {
   if (!PLAN.active) return;
   const b = PLAN.blocks[PLAN.i]; if (b) b.done = true;
   const f = $("#session .result .s-foot"); if (!f) return;
-  const nx = PLAN.blocks[PLAN.i + 1];
-  f.innerHTML = `<button class="btn" data-act="plan-stop">Stop for today</button><button class="btn primary" data-act="plan-next" data-cont>${nx ? "Next: " + esc(nx.label.replace(/^(Lesson|Grammar|Conversation): /, "")) : "See my plan"} ${IC.arrow}</button>`;
-  const r = $("#session .result"); if (r && !$(".plantag", r)) r.insertAdjacentHTML("afterbegin", `<span class="tag green plantag">My ${goalMin()} minutes · ${PLAN.i + 1} of ${PLAN.blocks.length} done · ${minsOn(dkey(Date.now()))} min today</span>`);
+  const nx = PLAN.blocks[nextBlock()], left = PLAN.blocks.filter(x => !x.done).length;
+  f.innerHTML = `<button class="btn" data-act="plan-stop">Stop for today</button>${left > 1 ? `<button class="btn" data-act="plan-view">Choose next</button>` : ""}<button class="btn primary" data-act="plan-next" data-cont>${nx ? "Next: " + esc(nx.label.replace(/^(Lesson|Grammar|Conversation): /, "")) : "See my plan"} ${IC.arrow}</button>`;
+  const r = $("#session .result"); if (r && !$(".plantag", r)) r.insertAdjacentHTML("afterbegin", `<span class="tag green plantag">My ${goalMin()} minutes · ${PLAN.blocks.length - left} of ${PLAN.blocks.length} done · ${minsOn(dkey(Date.now()))} min today</span>`);
 }
 function planStart() { PLAN.active = true; PLAN.blocks = buildPlan(); PLAN.i = 0; planOverview(); }
 function planTodayHTML() {

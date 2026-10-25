@@ -484,7 +484,14 @@ svg.chart text{fill:var(--muted);font:12px var(--f-body)}
 .planbox{display:grid;gap:14px}
 .planbox h2{font-size:clamp(36px,6vw,52px)}
 .planlist{list-style:none;margin:6px 0;padding:0;display:grid;gap:8px}
-.planlist li{display:flex;gap:14px;align-items:center;padding:12px 14px;border-radius:16px;background:var(--surface);border:1px solid var(--line)}
+.planlist li{border-radius:16px;background:var(--surface);border:1px solid var(--line);transition:border-color .15s}
+.planlist .plrow{display:flex;gap:14px;align-items:center;width:100%;padding:12px 14px;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer;border-radius:16px}
+.planlist .plrow[disabled]{cursor:default}
+.planlist li:not(.done):hover{border-color:var(--green)}
+.planlist .pl{flex:1;min-width:0}
+.planlist .go{color:var(--muted);opacity:0;transition:opacity .15s;display:grid}
+.planlist .go svg{width:18px;height:18px}
+.planlist li:not(.done):hover .go,.planlist li.cur .go{opacity:1}
 .planlist .dot{width:34px;height:34px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-weight:600;font-size:14px;flex:none;color:var(--muted)}
 .planlist .dot svg{width:17px;height:17px}
 .planlist .pl{display:grid}
