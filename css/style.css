@@ -284,6 +284,11 @@ svg.chart text{fill:var(--muted);font:12px var(--f-body)}
 .opt.meh{border-color:var(--ok);background:var(--ok-soft)}
 .opt[disabled]{cursor:default}
 .opt .en{display:block;font-weight:400;font-size:14px;color:var(--muted)}
+.optwrap{position:relative}
+.optwrap .opt{width:100%;padding-right:62px}
+.entog{position:absolute;right:12px;top:50%;transform:translateY(-50%);font:700 11.5px/1 var(--f-body);letter-spacing:.06em;padding:7px 9px;border-radius:9px;border:1.5px solid var(--line);background:var(--surface-2);color:var(--muted);cursor:pointer}
+.entog:hover{border-color:var(--green);color:var(--ink)}
+.entog.on{background:var(--green);border-color:var(--green);color:#fff}
 .feedback{border-radius:16px;padding:15px 18px;display:grid;gap:6px;animation:rise .25s ease both}
 .feedback.good{background:var(--good-soft)} .feedback.bad{background:var(--bad-soft)} .feedback.ok{background:var(--ok-soft)}
 .feedback b.h{font:400 24px/1.1 var(--f-display)}

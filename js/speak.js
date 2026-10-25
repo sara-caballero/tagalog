@@ -22,13 +22,19 @@ function runScene(id, onDone) {
     const s = sc.steps[i];
     if (!s.prompt) { npc(s); i++; return setTimeout(step, 650); }
     let tries = 0;
-    choices.innerHTML = `<p class="q small muted" style="font-weight:700;margin:6px 0 10px">${esc(fillVars(s.prompt))}</p><div class="opts">${shuffle(s.opts.map((o, k) => ({ o, k }))).map(({ o, k }, n) => `<button class="opt" data-k="${k}"><span class="k">${n + 1}</span><span class="t"><span class="tl">${esc(fillVars(o.t))}</span>${S.settings.showEn ? `<span class="en">${esc(fillVars(o.en))}</span>` : ""}</span></button>`).join("")}</div><div id="sfb"></div>`;
+    choices.innerHTML = `<p class="q small muted" style="font-weight:700;margin:6px 0 10px">${esc(fillVars(s.prompt))}</p><div class="opts">${shuffle(s.opts.map((o, k) => ({ o, k }))).map(({ o, k }, n) => `<div class="optwrap"><button class="opt" data-k="${k}"><span class="k">${n + 1}</span><span class="t"><span class="tl">${esc(fillVars(o.t))}</span><span class="en"${S.settings.showEn ? "" : " hidden"}>${esc(fillVars(o.en))}</span></span></button><button class="entog${S.settings.showEn ? " on" : ""}" type="button" title="English" aria-label="Show English">EN</button></div>`).join("")}</div><div id="sfb"></div>`;
     scrollBottom();
+    $$(".entog", choices).forEach(t => t.addEventListener("click", () => {
+      const en = $(".en", t.previousElementSibling);
+      en.hidden = !en.hidden; t.classList.toggle("on", !en.hidden);
+    }));
     $$(".opt", choices).forEach(b => b.addEventListener("click", () => {
       const o = s.opts[+b.dataset.k], t = fillVars(o.t);
       const fb = $("#sfb", choices);
-      if (o.r === "bad") { tries++; b.classList.add("wrong"); b.disabled = true; fb.innerHTML = feedback("bad", "Hmm, not that one.", `<p class="small">${esc(fillVars(o.fb))}</p>`); scrollBottom(); return; }
+      if (o.r === "bad") { tries++; b.classList.add("wrong"); b.disabled = true; $(".en", b).hidden = false; fb.innerHTML = feedback("bad", "Hmm, not that one.", `<p class="small">${esc(fillVars(o.fb))}</p>`); scrollBottom(); return; }
       $$(".opt", choices).forEach(x => x.disabled = true);
+      $$(".opt .en", choices).forEach(x => x.hidden = false);
+      $$(".entog", choices).forEach(x => x.remove());
       b.classList.add(o.r === "good" ? "right" : "meh");
       if (!tries && o.r === "good") { clean++; addXP(10, b); } else addXP(4, b);
       done++;
